@@ -48,7 +48,7 @@ def check_finger_bend(landmarks, finger_indices):
     angle2 = calculate_angle((p2.x, p2.y), (p3.x, p3.y), (p4.x, p4.y))
 
     # Fingers are bent if both angles are less than 90 degrees (consider adding more points for accuracy)
-    if angle1 < 85 and angle2 < 85:
+    if angle1 < 80 and angle2 < 80:
         return True
     return False
 
@@ -108,11 +108,12 @@ while True:
 
     # Exit the program on q
     key = cv2.waitKey(1) & 0xFF
-    if key == ord('q'):
+    if key == ord('q') or key == ord('Q'):
         break
-    elif key == ord('t'):  # Toggle tracking on/off
+    elif key == ord('t') or key == ord('T'):  # Toggle tracking on/off
         tracking_enabled = not tracking_enabled
 
 # Release the camera and close all windows
 cap.release()
 cv2.destroyAllWindows()
+#Add hand tracking for each hand (and colorful for each finger)
