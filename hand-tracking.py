@@ -48,7 +48,7 @@ def check_finger_bend(landmarks, finger_indices):
     angle2 = calculate_angle((p2.x, p2.y), (p3.x, p3.y), (p4.x, p4.y))
 
     # Fingers are bent if both angles are less than 90 degrees (consider adding more points for accuracy)
-    if angle1 < 80 and angle2 < 80:
+    if angle1 < 85 and angle2 < 85:
         return True
     return False
 
