@@ -108,11 +108,12 @@ while True:
 
     # Exit the program on q
     key = cv2.waitKey(1) & 0xFF
-    if key == ord('q'):
+    if key == ord('q') or key == ord('Q'):
         break
-    elif key == ord('t'):  # Toggle tracking on/off
+    elif key == ord('t') or key == ord('T'):  # Toggle tracking on/off
         tracking_enabled = not tracking_enabled
 
 # Release the camera and close all windows
 cap.release()
 cv2.destroyAllWindows()
+#Add hand tracking for each hand (and colorful for each finger)

@@ -1,2 +1,10 @@
-# hand-tracking
-A Python program for real-time hand tracking and finger bending detection using MediaPipe and OpenCV.
+# Hand Tracking with Finger Bend Detection
+This project uses MediaPipe and OpenCV to track hand movements and detect bent fingers in real-time.
+
+## Features
+- Tracks hand landmarks.
+- Detects bending of individual fingers.
+
+## Installation
+```bash
+pip install -r requirements.txt
