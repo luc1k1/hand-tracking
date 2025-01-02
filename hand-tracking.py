@@ -12,6 +12,36 @@ cap = cv2.VideoCapture(0)
 # Flag for tracking
 tracking_enabled = True
 
+# Default finger colors
+finger_colors = {
+    "thumb": (255, 0, 0),  # Red
+    "index": (0, 255, 0),  # Green
+    "middle": (0, 0, 255), # Blue
+    "ring": (255, 255, 0), # Yellow
+    "pinky": (255, 0, 255) # Magenta
+}
+
+selected_color = (255, 255, 255)  # Default selected color
+
+# Function to draw the color selector
+def draw_color_selector(frame):
+    colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (255, 255, 255), (0,0,0)]
+    color_names = ["Red", "Green", "Blue", "Yellow", "Magenta", "White", "Black"]
+
+    x_start = 10
+    y_start = 10
+    box_size = 40
+
+    cv2.putText(frame, "Choose the color:", (x_start, y_start - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+
+    for i, color in enumerate(colors):
+        x = x_start
+        y = y_start + i * (box_size + 10)
+        cv2.rectangle(frame, (x, y), (x + box_size, y + box_size), color, -1)
+        cv2.putText(frame, color_names[i], (x + box_size + 10, y + 25), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+
+    return colors
+
 # Function to calculate the angle between three points
 def calculate_angle(p1, p2, p3):
     #Calculate the angle between three points (p1, p2, p3)
