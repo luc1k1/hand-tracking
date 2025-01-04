@@ -146,4 +146,4 @@ while True:
 # Release the camera and close all windows
 cap.release()
 cv2.destroyAllWindows()
-#Add hand tracking for each hand (and colorful for each finger)
+#Add hand tracking for each hand 
