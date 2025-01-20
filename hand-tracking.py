@@ -18,7 +18,6 @@ finger_colors = {
     "middle": (0, 0, 255), # Blue
     "ring": (255, 255, 0), # Yellow
     "pinky": (255, 0, 255), # Magenta
-    "white": (255,255,255) #White
 }
 
 selected_color = (255, 255, 255)  # Default selected color
