@@ -17,14 +17,15 @@ finger_colors = {
     "index": (0, 255, 0),  # Green
     "middle": (0, 0, 255), # Blue
     "ring": (255, 255, 0), # Yellow
-    "pinky": (255, 0, 255) # Magenta
+    "pinky": (255, 0, 255), # Magenta
+    "white": (255,255,255) #White
 }
 
 selected_color = (255, 255, 255)  # Default selected color
 
 # Function to draw the color selector
 def draw_color_selector(frame):
-    colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (255, 255, 255), (0,0,0)]
+    colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (255, 255, 255), (0,0,0)] #colors
     color_names = ["Red", "Green", "Blue", "Yellow", "Magenta", "White", "Black"]
 
     x_start = 10
