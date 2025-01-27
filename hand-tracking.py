@@ -24,8 +24,8 @@ selected_color = (255, 255, 255)  # Default selected color
 
 # Function to draw the color selector
 def draw_color_selector(frame):
-    colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (255, 255, 255), (0,0,0)] #colors
-    color_names = ["Red", "Green", "Blue", "Yellow", "Magenta", "White", "Black"]
+    colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0,0,0)] #colors
+    color_names = ["Red", "Green", "Blue", "Yellow", "Magenta", "White", "Black"]5,
 
     x_start = 10
     y_start = 10
