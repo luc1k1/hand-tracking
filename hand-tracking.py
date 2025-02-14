@@ -22,6 +22,10 @@ finger_colors = {
     "pinky": (255, 0, 255) # Magenta
 }
 
+# Available colors for drawing
+drawing_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (255, 255, 255), (0, 0, 0)]
+selected_color = (255, 255, 255)  # Default color (White)
+
 # Define finger landmarks
 finger_indices = {
     "thumb": [mp_hands.HandLandmark.THUMB_CMC, mp_hands.HandLandmark.THUMB_MCP,
@@ -75,6 +79,11 @@ while True:
     if results.multi_hand_landmarks and tracking_enabled:
         for hand_landmarks in results.multi_hand_landmarks:
             mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+            
+            index_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
+            if index_tip.y < 0.1:
+                selected_color = drawing_colors[int(index_tip.x * len(drawing_colors)) % len(drawing_colors)]
+                cv2.putText(frame, "Color changed!", (50, 400), cv2.FONT_HERSHEY_SIMPLEX, 1, selected_color, 2)
 
             for finger, indices in finger_indices.items():
                 if check_finger_bend(hand_landmarks.landmark, indices):
