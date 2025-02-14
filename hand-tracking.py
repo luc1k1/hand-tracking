@@ -3,7 +3,6 @@ import math
 import mediapipe as mp
 import numpy as np
 
-# Initialize MediaPipe Hands
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(min_detection_confidence=0.7, min_tracking_confidence=0.7, max_num_hands=2)
 mp_drawing = mp.solutions.drawing_utils
