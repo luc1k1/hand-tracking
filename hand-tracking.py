@@ -23,7 +23,7 @@ finger_colors = {
 
 # Available colors for drawing
 drawing_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (255, 255, 255), (0, 0, 0)]
-selected_color = (255, 255, 255)  # Default color (White)
+selected_color = (255, 255, 255)  # Default color - White
 
 drawing = False
 
