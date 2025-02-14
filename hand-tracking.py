@@ -17,55 +17,34 @@ tracking_enabled = True
 finger_colors = {
     "thumb": (255, 0, 0),  # Red
     "index": (0, 255, 0),  # Green
-    "middle": (0, 0, 255), # Blue
-    "ring": (255, 255, 0), # Yellow
-    "pinky": (255, 0, 255) # Magenta
+    "middle": (0, 0, 255),  # Blue
+    "ring": (255, 255, 0),  # Yellow
+    "pinky": (255, 0, 255)  # Magenta
 }
 
 # Available colors for drawing
 drawing_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (255, 255, 255), (0, 0, 0)]
 selected_color = (255, 255, 255)  # Default color (White)
 
+drawing = False
+
 # Define finger landmarks
 finger_indices = {
     "thumb": [mp_hands.HandLandmark.THUMB_CMC, mp_hands.HandLandmark.THUMB_MCP,
-               mp_hands.HandLandmark.THUMB_IP, mp_hands.HandLandmark.THUMB_TIP],
+              mp_hands.HandLandmark.THUMB_IP, mp_hands.HandLandmark.THUMB_TIP],
     "index": [mp_hands.HandLandmark.INDEX_FINGER_MCP, mp_hands.HandLandmark.INDEX_FINGER_PIP,
-               mp_hands.HandLandmark.INDEX_FINGER_DIP, mp_hands.HandLandmark.INDEX_FINGER_TIP],
+              mp_hands.HandLandmark.INDEX_FINGER_DIP, mp_hands.HandLandmark.INDEX_FINGER_TIP],
     "middle": [mp_hands.HandLandmark.MIDDLE_FINGER_MCP, mp_hands.HandLandmark.MIDDLE_FINGER_PIP,
-                mp_hands.HandLandmark.MIDDLE_FINGER_DIP, mp_hands.HandLandmark.MIDDLE_FINGER_TIP],
+               mp_hands.HandLandmark.MIDDLE_FINGER_DIP, mp_hands.HandLandmark.MIDDLE_FINGER_TIP],
     "ring": [mp_hands.HandLandmark.RING_FINGER_MCP, mp_hands.HandLandmark.RING_FINGER_PIP,
-              mp_hands.HandLandmark.RING_FINGER_DIP, mp_hands.HandLandmark.RING_FINGER_TIP],
+             mp_hands.HandLandmark.RING_FINGER_DIP, mp_hands.HandLandmark.RING_FINGER_TIP],
     "pinky": [mp_hands.HandLandmark.PINKY_MCP, mp_hands.HandLandmark.PINKY_PIP,
-               mp_hands.HandLandmark.PINKY_DIP, mp_hands.HandLandmark.PINKY_TIP]
+              mp_hands.HandLandmark.PINKY_DIP, mp_hands.HandLandmark.PINKY_TIP]
 }
 
-# Function to calculate the angle between three points
-def calculate_angle(p1, p2, p3):
-    x1, y1 = p1
-    x2, y2 = p2
-    x3, y3 = p3
-
-    vector1 = (x2 - x1, y2 - y1)
-    vector2 = (x3 - x2, y3 - y2)
-
-    dot_product = vector1[0] * vector2[0] + vector1[1] * vector2[1]
-    magnitude1 = math.sqrt(vector1[0] ** 2 + vector1[1] ** 2)
-    magnitude2 = math.sqrt(vector2[0] ** 2 + vector2[1] ** 2)
-
-    if magnitude1 * magnitude2 == 0:
-        return 180
-
-    cos_angle = dot_product / (magnitude1 * magnitude2)
-    cos_angle = max(min(cos_angle, 1.0), -1.0)
-    return math.degrees(math.acos(cos_angle))
-
-# Function to check if a finger is bent
-def check_finger_bend(landmarks, indices):
-    points = [landmarks[i] for i in indices]
-    angles = [calculate_angle((points[i].x, points[i].y), (points[i+1].x, points[i+1].y), (points[i+2].x, points[i+2].y))
-              for i in range(2)]
-    return all(angle < 85 for angle in angles)
+ret, frame = cap.read()
+frame_height, frame_width, _ = frame.shape
+canvas = np.zeros((frame_height, frame_width, 3), dtype=np.uint8)
 
 while True:
     ret, frame = cap.read()
@@ -79,28 +58,30 @@ while True:
     if results.multi_hand_landmarks and tracking_enabled:
         for hand_landmarks in results.multi_hand_landmarks:
             mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
-            
+
             index_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
+            x, y = int(index_tip.x * frame_width), int(index_tip.y * frame_height)
+
+            if drawing:
+                cv2.circle(canvas, (x, y), 5, selected_color, -1)
+
             if index_tip.y < 0.1:
                 selected_color = drawing_colors[int(index_tip.x * len(drawing_colors)) % len(drawing_colors)]
                 cv2.putText(frame, "Color changed!", (50, 400), cv2.FONT_HERSHEY_SIMPLEX, 1, selected_color, 2)
 
-            for finger, indices in finger_indices.items():
-                if check_finger_bend(hand_landmarks.landmark, indices):
-                    cv2.putText(frame, f"{finger.capitalize()} bent", (50, 50 + list(finger_indices.keys()).index(finger) * 50),
-                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    frame = cv2.addWeighted(frame, 0.5, canvas, 0.5, 0)
 
-    cv2.putText(frame, "Press 'T' to toggle tracking", (50, 300), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
-    cv2.putText(frame, "Tracking is ON" if tracking_enabled else "Tracking is OFF", (50, 350),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
-
-    cv2.imshow('Hand Tracking with Finger Bend Detection', frame)
+    cv2.imshow('Hand Tracking with Drawing', frame)
 
     key = cv2.waitKey(1) & 0xFF
     if key == ord('q'):
         break
     elif key == ord('t'):
         tracking_enabled = not tracking_enabled
+    elif key == ord('d'):
+        drawing = not drawing
+    elif key == ord('c'):
+        canvas[:] = 0
 
 cap.release()
 cv2.destroyAllWindows()
